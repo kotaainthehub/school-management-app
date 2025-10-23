@@ -1,0 +1,68 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="studentMarks" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="19fa6a5c-4eb1-401c-8f9f-c51514d8b984">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter (2)"/>
+    <query language="SQL"><![CDATA[
+        SELECT 
+            r.report_id AS id,
+            s.name,
+            s.class,
+            s.roll AS rollnumber,
+            r.grade,
+            r.phy,
+            r.chem,
+            r.math,
+            ROUND(((r.phy + r.chem + r.math) * 100.0) / 300, 2) AS growth_percentage
+        FROM reportcard r
+        JOIN stureg s ON r.student_id = s.student_id
+    ]]></query>
+
+    <field name="id" class="java.lang.Integer"/>
+    <field name="name" class="java.lang.String"/>
+    <field name="class" class="java.lang.String"/>
+    <field name="rollnumber" class="java.lang.String"/>
+    <field name="grade" class="java.lang.String"/>
+    <field name="phy" class="java.lang.Integer"/>
+    <field name="chem" class="java.lang.Integer"/>
+    <field name="math" class="java.lang.Integer"/>
+    <field name="growth_percentage" class="java.math.BigDecimal"/>
+
+    <background splitType="Stretch"/>
+    <title height="106" splitType="Stretch">
+        <element kind="staticText" uuid="deb9ffa4-0dee-4e30-bfec-9fb04d822c4d" x="122" y="30" width="296" height="30" fontSize="19.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+            <text><![CDATA[Student Progress Report]]></text>
+        </element>
+    </title>
+    <pageHeader height="35" splitType="Stretch"/>
+    <columnHeader height="67" splitType="Stretch">
+        <element kind="staticText" x="-11" y="10" width="41" height="20" fontSize="15.0" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[id]]></text></element>
+        <element kind="staticText" x="40" y="10" width="50" height="20" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[name]]></text></element>
+        <element kind="staticText" x="100" y="10" width="50" height="21" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[class]]></text></element>
+        <element kind="staticText" x="160" y="10" width="60" height="20" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[rollnumber]]></text></element>
+        <element kind="staticText" x="230" y="10" width="50" height="20" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[grade]]></text></element>
+        <element kind="staticText" x="280" y="10" width="40" height="20" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[phy]]></text></element>
+        <element kind="staticText" x="330" y="10" width="50" height="20" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[chem]]></text></element>
+        <element kind="staticText" x="390" y="10" width="48" height="20" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[math]]></text></element>
+        <element kind="staticText" x="450" y="10" width="110" height="20" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[growth_percentage]]></text></element>
+        <element kind="line" x="-20" y="0" width="595" height="1"/>
+    </columnHeader>
+
+    <detail>
+        <band height="46" splitType="Stretch">
+            <element kind="textField" x="-11" y="10" width="40" height="20" bold="true" hTextAlign="Left" vTextAlign="Middle"><expression><![CDATA[$F{id}]]></expression></element>
+            <element kind="textField" x="45" y="10" width="40" height="20" bold="true" hTextAlign="Left" vTextAlign="Middle"><expression><![CDATA[$F{name}]]></expression></element>
+            <element kind="textField" x="105" y="11" width="41" height="19" bold="true" hTextAlign="Left" vTextAlign="Middle"><expression><![CDATA[$F{class}]]></expression></element>
+            <element kind="textField" x="170" y="14" width="41" height="19" bold="true" hTextAlign="Left" vTextAlign="Middle"><expression><![CDATA[$F{rollnumber}]]></expression></element>
+            <element kind="textField" x="235" y="14" width="41" height="19" bold="true" hTextAlign="Left" vTextAlign="Middle"><expression><![CDATA[$F{grade}]]></expression></element>
+            <element kind="textField" x="280" y="14" width="41" height="19" bold="true" hTextAlign="Left" vTextAlign="Middle"><expression><![CDATA[$F{phy}]]></expression></element>
+            <element kind="textField" x="335" y="14" width="41" height="19" bold="true" hTextAlign="Left" vTextAlign="Middle"><expression><![CDATA[$F{chem}]]></expression></element>
+            <element kind="textField" x="394" y="14" width="41" height="19" bold="true" hTextAlign="Left" vTextAlign="Middle"><expression><![CDATA[$F{math}]]></expression></element>
+            <element kind="textField" x="485" y="14" width="41" height="19" bold="true" hTextAlign="Left" vTextAlign="Middle"><expression><![CDATA[$F{growth_percentage}]]></expression></element>
+            <element kind="line" x="-16" y="0" width="595" height="1"/>
+        </band>
+    </detail>
+
+    <columnFooter height="45" splitType="Stretch"/>
+    <pageFooter height="54" splitType="Stretch"/>
+    <summary height="42" splitType="Stretch"/>
+</jasperReport>
