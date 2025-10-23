@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
+import java.sql.ResultSet;
+
 
 /**
  *
@@ -243,67 +245,77 @@ public class reportcard extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         
-        try{
+         try {
+        // Load driver and connect
         Class.forName("com.mysql.jdbc.Driver");
-        Connection conn= DriverManager.getConnection("jdbc:mysql://localhost:3306/smschooldb", "root", "");
-        String sql="insert into reportcard values (?,?,?,?,?,?,?,?)";
-        String p= phy.getText();
-        double s1= Double.parseDouble(p);
-        String m= math.getText();
-        double s2= Double.parseDouble(m);
-        String c= chem.getText();
-        double s3= Double.parseDouble(c);
-        
-        double total=((s1+s2+s3)*100)/300;
-        
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/smschooldb", "root", "");
+
+        // Get student ID
+        String studentIdStr = id.getText().trim();
+        if(studentIdStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter a valid Student ID");
+            return;
+        }
+        int studentId = Integer.parseInt(studentIdStr);
+
+         // Fetch student details from stureg table
+        PreparedStatement pstStudent = conn.prepareStatement(
+            "SELECT name, roll, `class` FROM stureg WHERE student_id = ?");
+        pstStudent.setInt(1, studentId);
+        ResultSet rs = pstStudent.executeQuery();
+
+        if(!rs.next()) {
+            JOptionPane.showMessageDialog(null, "Student ID not found in stureg table");
+            return;
+        }
+
+        String studentName = rs.getString("name");
+        String studentRoll = rs.getString("roll");
+        String studentClass = rs.getString("class");
+
+        // Fill text fields automatically
+        name.setText(studentName);
+        roll.setText(studentRoll);
+        cl.setText(studentClass);
+
+        // Get marks from input fields
+        double phyMark = Double.parseDouble(phy.getText().trim());
+        double mathMark = Double.parseDouble(math.getText().trim());
+        double chemMark = Double.parseDouble(chem.getText().trim());
+
+        // Calculate grade
+        double totalPercent = ((phyMark + mathMark + chemMark) / 300.0) * 100;
         String grade;
         
-        if(total>= 80){
-        grade= "A+";
-        }
-        else if(total>=70 && total <80){
-        grade="A";
-        }
+       if(totalPercent >= 80) grade = "A+";
+        else if(totalPercent >= 70) grade = "A";
+        else if(totalPercent >= 60) grade = "B";
+        else if(totalPercent >= 50) grade = "C";
+        else if(totalPercent >= 40) grade = "D";
+        else grade = "Fail";
         
-        else if(total>=60 && total <70){
-        grade="B";
-        }
-        
-        else if(total>=50 && total <60){
-        grade="C";
-        }
-        
-        else if(total>=40 && total <50){
-        grade="D";
-        }
-        else
-        { grade="Fail";
-        }
-        
-        String n= name.getText();
-        String r=roll.getText();
-        String cla= cl.getText();
-        String ph= phy.getText();
-        String mt= math.getText();
-        String ch= chem.getText();
-        
-        
-            PreparedStatement ptst= conn.prepareStatement(sql);
-            ptst.setString(1, id.getText());
-            ptst.setString(2, n);
-            ptst.setString(3, cla);
-            ptst.setString(4, ph);
-            ptst.setString(5, ch);
-            ptst.setString(6, mt);
-            ptst.setString(7, r);
-            ptst.setString(8, grade);
-            
-            ptst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Data has been saved");
-            
-            text.setText("REPORT CARD\n\n Student Name: "+n+"\nClass: "+cla+"\n\n-----------------------\nMarks\n\nPhysics: "+ph+"\nChemistry: "+ch+
-                    "\nMath: "+mt+"\nGrade: "+grade);
-            conn.close();
+       // Insert into reportcard table
+        PreparedStatement pstInsert = conn.prepareStatement(
+            "INSERT INTO reportcard(student_id, phy, chem, math, grade) VALUES (?,?,?,?,?)");
+        pstInsert.setInt(1, studentId);
+        pstInsert.setDouble(2, phyMark);
+        pstInsert.setDouble(3, chemMark);
+        pstInsert.setDouble(4, mathMark);
+        pstInsert.setString(5, grade);
+
+        pstInsert.executeUpdate();
+
+        // Show report text in JTextPane
+        text.setText(
+            "REPORT CARD\n\nStudent Name: " + studentName +
+            "\nRoll Number: " + studentRoll +
+            "\nClass: " + studentClass +
+            "\n\n-----------------------\nMarks\n" +
+            "Physics: " + phyMark +
+            "\nChemistry: " + chemMark +
+            "\nMath: " + mathMark +
+            "\nGrade: " + grade
+        );
          
         
         }

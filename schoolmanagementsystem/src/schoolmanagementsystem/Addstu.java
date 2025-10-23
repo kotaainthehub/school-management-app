@@ -242,9 +242,12 @@ public class Addstu extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Data stores successfully");
             conn.close();
         
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(null, e);
-        }
+        } catch (ClassNotFoundException e) {
+    JOptionPane.showMessageDialog(null, "Database driver not found!");
+} catch (java.sql.SQLException e) {
+    JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage());
+}
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
